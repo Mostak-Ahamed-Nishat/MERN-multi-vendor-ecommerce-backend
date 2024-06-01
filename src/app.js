@@ -1,10 +1,22 @@
 import express from "express";
 import dotenv from "dotenv";
-
+import { ErrorHandler } from "./utils/ErrorHandler.js";
 dotenv.config();
 const app = express();
+import cookieParser from "cookie-parser";
+import multer from 'multer';
 
-app.get("/", (req, res) => res.send("Hello World! It's working."));
+//Require Middleware
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+// Middleware to parse cookies
+app.use(cookieParser());
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// Middleware to handle file uploads
+
 
 // Config
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -12,5 +24,8 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
     path: "",
   });
 }
+
+//Handler error with custom error handler
+app.use(ErrorHandler);
 
 export default app;
