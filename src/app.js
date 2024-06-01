@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import handleError from "./middleware/catchAsyncErrors.js";
+import handleError from "./middleware/error.js";
 dotenv.config();
 const app = express();
 import cookieParser from "cookie-parser";

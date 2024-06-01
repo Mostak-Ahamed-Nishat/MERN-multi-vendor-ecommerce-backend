@@ -6,11 +6,16 @@ import { ErrorHandler } from "../utils/ErrorHandler.js";
 const createUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-  
+
     //Is user already registered with the email ?
     const existingUser = await User.findOne({ email });
+
+    
     //If the user email already exits return error
     if (existingUser) {
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
       return next(new ErrorHandler("This email has already been used", 400));
     }
     // Get the file
@@ -21,7 +26,7 @@ const createUser = async (req, res, next) => {
       fileUrl = path.join("uploads", filename);
       public_id = filename.split(".")[0];
     }
-
+    //Prepare user data
     const user = {
       name,
       email,
@@ -32,6 +37,7 @@ const createUser = async (req, res, next) => {
       },
     };
 
+    //Save the user data
     const newUser = await User.create(user);
 
     return res.status(201).json({
