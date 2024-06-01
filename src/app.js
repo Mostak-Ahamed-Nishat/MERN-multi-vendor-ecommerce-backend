@@ -1,22 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
-import { ErrorHandler } from "./utils/ErrorHandler.js";
+import handleError from "./middleware/catchAsyncErrors.js";
 dotenv.config();
 const app = express();
 import cookieParser from "cookie-parser";
-import multer from 'multer';
+import bodyParser from "body-parser";
+import cors from "cors";
+import userRouter from "./routes/userRoute.js";
 
 //Require Middleware
-
-// Middleware to parse JSON bodies
-app.use(express.json());
-// Middleware to parse cookies
+app.use(cors());
 app.use(cookieParser());
-// Middleware to parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-
-// Middleware to handle file uploads
-
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(express.json());
 
 // Config
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -25,7 +21,10 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   });
 }
 
+//Application Routes
+app.use("/api/user", userRouter);
+
 //Handler error with custom error handler
-app.use(ErrorHandler);
+app.use(handleError);
 
 export default app;
