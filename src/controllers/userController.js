@@ -4,7 +4,7 @@ import path from "path";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import jwt from "jsonwebtoken";
 import sendMail from "../utils/sendMail.js";
-import sendToken from "../utils/jwtAuthToken.js";
+import createJwtAuthToken from "../utils/createJwtAuthToken.js";
 import createActivationJwtToken from "../helpers/createActivationJwtToken.js";
 
 //**Create a user or signup**
@@ -120,10 +120,40 @@ const activationUserByEmail = async (req, res, next) => {
       status: "active",
     });
 
-    sendToken(user, 200, res);
+    createJwtAuthToken(user, 200, res);
   } catch (error) {
     console.log(error.message);
     return next(new ErrorHandler(error.message, 500));
   }
 };
-export { createUser, activationUserByEmail };
+
+//** Login user* */
+const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(
+        new ErrorHandler("Please enter valid email or password", 400)
+      );
+    }
+    //Check the user
+    const user = await User.findOne({ email }).select("+password");
+    // if the user not exist
+    if (!user) {
+      return next(new ErrorHandler("No account found with this email", 400));
+    }
+    //Check the password
+    const checkPassword = await user.comparePassword(password);
+    //If the password invalid
+    if (!checkPassword) {
+      return next(new ErrorHandler("Invalid email or password", 400));
+    }
+
+    createJwtAuthToken(user, 201, res);
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+};
+
+export { createUser, activationUserByEmail, loginUser };

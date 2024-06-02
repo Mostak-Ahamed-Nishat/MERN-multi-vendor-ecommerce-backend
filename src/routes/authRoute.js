@@ -4,6 +4,7 @@ import { upload } from "../config/multer/multer.js";
 import {
   activationUserByEmail,
   createUser,
+  loginUser,
 } from "../controllers/userController.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 
@@ -15,9 +16,8 @@ router.post(
 );
 
 //Active user by email verification
-router.post(
-  "/activation",
-  catchAsyncErrors(activationUserByEmail)
-);
+router.post("/activation", catchAsyncErrors(activationUserByEmail));
+
+router.post("/auth/login", catchAsyncErrors(loginUser));
 
 export default router;
