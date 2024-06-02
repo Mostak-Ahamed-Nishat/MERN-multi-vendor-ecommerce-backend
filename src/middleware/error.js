@@ -4,6 +4,8 @@ export default (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.message = err.message || "Internal server Error";
 
+  console.log(err);
+
   // wrong mongodb id error
   if (err.name === "CastError") {
     const message = `Resources not found with this id.. Invalid ${err.path}`;
@@ -31,5 +33,6 @@ export default (err, req, res, next) => {
   return res.status(err.statusCode).json({
     success: false,
     message: err.message,
+    error: err,
   });
 };
