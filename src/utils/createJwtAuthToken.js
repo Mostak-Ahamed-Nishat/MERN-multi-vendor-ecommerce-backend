@@ -13,7 +13,7 @@ const createJwtAuthToken = (user, statusCode, res) => {
   //Remove confidential data from user
   const { password, ...userWithoutPassword } = user.toObject();
 
-  res.status(statusCode).cookie("access_token", token, options).json({
+  res.status(statusCode).cookie("token", token, options).json({
     success: true,
     user: userWithoutPassword,
     token,

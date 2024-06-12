@@ -5,7 +5,7 @@ import {
   activationUserByEmail,
   createUser,
   loginUser,
-} from "../controllers/userController.js";
+} from "../controllers/authController.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 
 //Create a new user
@@ -18,6 +18,6 @@ router.post(
 //Active user by email verification
 router.post("/activation", catchAsyncErrors(activationUserByEmail));
 
-router.post("/auth/login", catchAsyncErrors(loginUser));
+router.post("/login", catchAsyncErrors(loginUser));
 
 export default router;

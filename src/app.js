@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";
 import authRoute from "./routes/authRoute.js";
+import userRoute from "./routes/userRoute.js";
 
 //CORS configuration
 
@@ -30,8 +31,9 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   });
 }
 
-//Application Routes
-app.use("/api/user", authRoute);
+/** Application Routes */
+app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
 
 //Handler error with custom error handler
 app.use(handleError);
